@@ -1,9 +1,8 @@
 const {ethers} = require("hardhat");
-
 async function main() {
 const VotingFactory = await ethers.getContractFactory("VotingSystem");
 console.log("Contract is deploying...");
-const votingDeploy =  await VotingFactory.deploy(1670077681,["A","B","C","D"]);
+const votingDeploy =  await VotingFactory.deploy(["Topic/Nominee-1","Topic/Nominee-2","Topic/Nominee-3","Topic/Nominee-4"]);
 await votingDeploy.deployed();
 const contractAddress = await votingDeploy.address;
 console.log(`Address of the contract is:${contractAddress}`);
@@ -18,4 +17,5 @@ main()
     console.log(error);
     process.exit(1);
   });
+  
 

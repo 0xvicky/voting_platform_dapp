@@ -17,6 +17,7 @@ function ApproveVoters(){
             console.log(data);
         } catch (error) {
             console.log(`Error occured ${error}`);
+            alert("Only chairman can call");
         }
     }
 

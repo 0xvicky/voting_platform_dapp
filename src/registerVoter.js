@@ -15,10 +15,11 @@ function RegisterVoter(){
         
         try {
           const data = await contract.register();
-          await data.wait();
           console.log(`${data}`);
         } catch (error) {
           console.log(`Error ${error}`)
+          alert("Chairman cannot register");
+          alert("Reset Metamask,Incase of RPC error");
         }
       }
 

@@ -2,19 +2,6 @@
 pragma solidity ^0.8.7;
 
 contract VotingSystem{
-// 1. Prepare a smart contract (using solidity) for the voting platform which has the following
-// features:
-// a. Users should be able to create a topic to vote on.
-// b. Users should be able to create the voting options for the topic they’ve created. E.g.
-// options like “yes”, “no”, “maybe” etc.
-// c. Other users should be able to vote on a particular option on a topic.
-// d. In order to vote, the users have to register themselves as a voter, and the topic creator
-// should have the option to either allow or reject the applicant.
-// e. Only allowed users should be able to vote on a topic.
-// f. Voters should be able to choose only one option for a topic.
-// g. The voting topic should have a user specified expiry time. After the expiry time, no
-// voting should take place.
-// h. There should be a clear vote count for each option at the end of expiry time.
  struct Nominee{
      string name;
      uint256 noOfVotes;
@@ -85,28 +72,46 @@ contract VotingSystem{
      }
      _;
  }
- constructor(uint256 _expiryTime,string[] memory _nominees){
-   chairman = msg.sender;   
+ constructor(string[] memory _nominees){
    for(uint i=0;i<_nominees.length;i++){
     nomineeList.push(Nominee({
         name : _nominees[i],
         noOfVotes : 0
 
     }));
-    expiryTime = _expiryTime;//_expiryTime should be in UNIX timestamp
    }}
 
 //Functions
+function getChairman() external view returns(address){
+   return chairman;
+}
+
+function setExpiryTime(uint256 _expiryTime) external{
+expiryTime = _expiryTime;
+chairman = msg.sender;
+}
+
+function getExpiryTime() external view returns(uint256){
+   return expiryTime;
+}
+
+function getNomineeListLen() external view returns(uint256){
+   return nomineeList.length;
+}
+function getVoterListLen() external view returns(uint256){
+   return proposedVoters.length;
+}
  function register() external registrationRules {
-   proposedVoters.push(Vote
+   proposedVoters.push(Voter({voterAddress:msg.sender,isRegistered:true,isVoted:false,pass:false}));
+ }
  function rejectVoter(uint _voterIndex) public onlyChairman{
   _rejectedVoters.push(proposedVoters[_voterIndex].voterAddress);
   for(uint i=_voterIndex; i<proposedVoters.length-1; i++){
       proposedVoters[i] = proposedVoters[i+1];
   }
   proposedVoters.pop();
- }r({voterAddress:msg.sender,isRegistered:true,isVoted:false,pass:false}));
  }
+
  function approveVoters() public onlyChairman{
     for(uint i=0; i<proposedVoters.length;i++){
     Voter storage _voter = voterList[proposedVoters[i].voterAddress];
@@ -117,14 +122,14 @@ contract VotingSystem{
     }
     }
 
- function vote(uint256 _index) external votingRules{
+ function vote(uint256 _index) external votingRules {
     Voter storage _voter = voterList[msg.sender];
     _voter.isVoted = true;
     nomineeList[_index].noOfVotes+=1;
     emit votingStatus(msg.sender, true);
  }
 
- function findWinner() public {
+ function findWinner() external  {
     if(msg.sender != chairman){
         revert notEligible("Only Chairman can call this function");
     }
@@ -138,9 +143,11 @@ contract VotingSystem{
         }
         else{winnerVoteCount = winnerVoteCount ;}
     }
+
+   
  }
-
-
-
+    function getWinner() external view returns(uint256){
+      return winnerIndex;
+    }
 
 }

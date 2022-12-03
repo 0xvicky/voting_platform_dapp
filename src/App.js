@@ -8,14 +8,19 @@ import RejectVoter from "./rejectVoter.js";
 import ApproveVoters from "./approveVoter.js";
 import Vote from "./vote.js";
 import FindWinner from "./findWinner.js";
-
+import GetConstructors from "./constructors.js";
+import SetEssentials from "./setEssentials.js";
 function App() {
-  return (
+
+ return (
     <>
       <div className="text-center item-center">
         <h2>Decentralised Voting Platform</h2>
         <hr></hr>
         <ConnButton />
+        <hr></hr>
+        <SetEssentials /><br></br>
+        <GetConstructors />
         <hr></hr>
         <NomineeList />
         <hr></hr>
@@ -32,8 +37,4 @@ function App() {
     </>
   );
 }
-//make vote function
-//make find winner funciton
-//make chairman and expiry time seem on UI
-//show warnign with expiry time
 export default App;

@@ -17,6 +17,7 @@ function RejectVoter(){
             
         } catch (error) {
             console.log(`Error occured ${error}`)
+            alert("Only Chairman can Call");
         }
     }
 

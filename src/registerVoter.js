@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {ethers} from 'ethers';
-import {contractAddress,abi} from './constants.js';
+import {contractAddress, abi} from './constants.js';
+
 
 function RegisterVoter(){
     

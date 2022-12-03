@@ -98,14 +98,14 @@ contract VotingSystem{
 
 //Functions
  function register() external registrationRules {
-   proposedVoters.push(Voter({voterAddress:msg.sender,isRegistered:true,isVoted:false,pass:false}));
- }
+   proposedVoters.push(Vote
  function rejectVoter(uint _voterIndex) public onlyChairman{
   _rejectedVoters.push(proposedVoters[_voterIndex].voterAddress);
   for(uint i=_voterIndex; i<proposedVoters.length-1; i++){
       proposedVoters[i] = proposedVoters[i+1];
   }
   proposedVoters.pop();
+ }r({voterAddress:msg.sender,isRegistered:true,isVoted:false,pass:false}));
  }
  function approveVoters() public onlyChairman{
     for(uint i=0; i<proposedVoters.length;i++){

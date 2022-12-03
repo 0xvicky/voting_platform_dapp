@@ -1,55 +1,35 @@
 import React,{useState} from "react";
+import {ethers} from "ethers";
+import {contractAddress, abi} from "./constants.js";
+
 
 function VoterList() {
   
-  const [nomineeName, setNomineeName] = useState(null) ;
+  const [voterIndex, setVoterIndex] = useState(null) ;
 
 
-  const addNominees = ()=>{
-  
+  const callVoterList = async()=>{
+    if(!voterIndex) return;
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const contract = new ethers.Contract(contractAddress,abi, provider);
+
+  try {
+    const data = await contract.proposedVoters(voterIndex);
+    const arrData = (Array.from(data))[0];
+    console.log(arrData);
+    const voterInfoSel = document.querySelector("#voterInfoId");
+    voterInfoSel.innerHTML = `<span>${arrData}</span>`; 
+  } catch (error) {
+    console.log(`Error occured ${error}`)
+  }
   }
  
 
   return (
     <>
-    <div>
-      <table class="table table-dark table-striped ">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Votes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>alex</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td >Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div>
-    <form class="row g-3">
-  <div class="col-auto">
-    <input type="text" class="form-control" id="inputPassword2" placeholder="NomineeName"></input>
-  </div>
-  <div class="col-auto">
-    <button type="submit" class="btn btn-primary mb-3">Add Nominee</button>
-  </div>
-</form>
-    </div>
+    <button onClick = {callVoterList}>callVoter</button>
+    <input onChange = {e=>setVoterIndex(e.target.value)} placeholder = "VoterIndex" />
+    <span id = "voterInfoId"></span>
     </>
   );
 }
